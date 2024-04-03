@@ -1,0 +1,97 @@
+-- How many pizzas were ordered?
+-- SELECT COUNT(*) as Ordered_Pizzas
+-- FROM customer_orders
+
+
+-- How many unique customer orders were made?
+-- SELECT count(DISTINCT order_id) as Unique_orders
+-- FROM customer_orders
+
+
+-- How many successful orders were delivered by each runner?
+-- SELECT COUNT(order_id)as sucsessfull_orders , runner_id
+-- FROM
+-- RUNNER_ORDERS
+-- Where  pickup_time <> 'null'
+-- group BY RUNNER_ID
+
+
+-- With CTE as (SELECT COUNT(PIZZA_ID),PIZZA_ID
+-- FROM CUSTOMER_ORDERS
+-- GROUP BY PIZZA_ID) 
+-- SELECT
+-- *
+-- FROM pizza_names as N
+-- inner join CTE  on N.PIZZA_ID =CTE.pizza_id
+
+-- How many of each pizza was ordered by each customer
+-- SELECT pizza_name, 
+-- COUNT(*) as delivered_pizzas 
+-- FROm runner_orders as RO
+-- INNER JOIN customer_orders as CO on RO.order_id = CO.order_id
+-- INNER JOIN pizza_names as PN on PN.pizza_id =CO.pizza_id
+-- GROUP by PIZZA_NAME
+
+-- What was the maximum number of pizzas delivered in a single order?
+-- WITH CTE AS (SELECT (COUNT(PIZZA_ID)) as CONT_pizza,order_id
+-- FROM
+-- CUSTOMER_ORDERS
+-- GROUP BY ORDER_ID)
+
+-- SELECT  MAX(CONT_pizza) as Maximum_number_of_pizzas_in_an_Order
+-- FROM CTE 
+
+
+
+
+-- For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+-- SELECT *,
+-- CASE
+-- WHEN EXCLUSIONS = 'null' or '' and  EXTRAS = '' or 'null'
+-- THEN 1
+-- ELSE 2
+-- END AS Flag
+-- FROM CUSTOMER_ORDERS
+-- WIth Changes As CTE(
+-- SELECT*,
+-- (CASE
+-- WHEN
+-- EXTRAS = 'null' THEN 0
+-- WHEN
+-- EXTRAS = '' THEN 0
+-- ELSE
+-- 1
+-- END)+ 
+-- (CASE
+-- WHEN
+-- EXTRAS = 'null' THEN 0
+-- WHEN
+-- EXTRAS = '' THEN 0
+-- ELSE
+-- 1
+-- END) as changes
+-- FROM CUSTOMER_ORDERS)
+-- SELECT* FROm changes
+
+-- WHERE EXCLUSIONS <> '' and EXCLUSIONS <> 'null' OR EXTRAS <> '' and EXTRAS <> 'null'
+-- How many pizzas were delivered that had both exclusions and extras?
+-- What was the total volume of pizzas ordered for each hour of the day?
+-- -- WITH CTE as(
+-- -- SELECT TO_TIME( ORDER_TIME) as TIME_STAMP
+-- -- FROM 
+-- -- CUSTOMER_ORDERS)
+-- -- SELECT * 
+-- -- FROM CTE
+-- DATE_TRUNC('hour',TIME_STAMP)
+-- SELECT 
+-- DATE_PART('hour',order_time) As hours
+-- ,COUNT(*) as pizza_volume
+-- FROM CUSTOMER_ORDERS
+-- GROUP BY DATE_PART('hour',order_time);
+
+-- What was the volume of orders for each day of the week?
+-- SELECT
+-- DAYNAME(order_time) as day,
+-- COUNT(*) as pizza_volume
+-- FROM customer_orders
+-- GROUp BY DAYNAME(order_time)
